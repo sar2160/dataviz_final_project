@@ -1,5 +1,5 @@
 //****** globals
-var nervousBall = [];
+var scatterDots = [];
 
 var dataTable;
 
@@ -27,6 +27,23 @@ function countRecords(boro){
   return(counter);
 }
 
+
+function plotScatter(boro){
+  var max_poverty = getMaxValue('poverty_rate');
+  var max_rent_premium = getMaxValue('premium_pct_median_rent');
+
+  for (var i = 0; i < dataTable.getRowCount(); i++){
+    var b   = dataTable.getString(i,'County ');
+
+    if (b == boro){
+      var prem = dataTable.getNum(i,'premium_pct_median_rent');
+      var pov = dataTable.getNum(i, 'poverty_rate');
+      scatterDots.push(new Dot(x = pov, y = prem, max_x = 1, max_y = max_rent_premium));
+    }
+
+  }
+}
+
 function getSum(total, num) {
     return total + num;
 }
@@ -48,20 +65,11 @@ function setup(){
   print(dataTable.getRowCount() + ' rows loaded...');
   print(dataTable.getColumnCount() + ' columns loaded...');
 
-  var max_poverty = getMaxValue('poverty_rate');
-  var max_rent_premium = getMaxValue('premium_pct_median_rent');
 
 
 
-  for (var i = 0; i < dataTable.getRowCount(); i++){
-    var b   = dataTable.getString(i,'County ');
 
-    if (b == 'Kings'){
-      var prem = dataTable.getNum(i,'premium_pct_median_rent');
-      var pov = dataTable.getNum(i, 'poverty_rate');
-      nervousBall.push(new Dot(x = pov, y = prem, max_x = 1, max_y = max_rent_premium));
-    }
-  }
+  plotScatter('Richmond');
 
 
 }
@@ -69,8 +77,8 @@ function setup(){
 function draw(){
   fill(0,100,100,0.1);
   background(365);
-  for (var i = 0; i < nervousBall.length; i++){
-     nervousBall[i].display();
+  for (var i = 0; i < scatterDots.length; i++){
+     scatterDots[i].display();
 
    }
 }
