@@ -40,23 +40,10 @@ div.chart-text{
 
 }
 
-.first {
-    background:blue;
-    height: 600px;
-    width:100%;
-}
-.second {
-    background:white;
-    height: 600px;
-    width:50%;
-}
-.third {
-    background:white;
-    height: 800px;
-    width:100%;
-}
-.fourth {
-    background:white;
-    height: 800px;
-    width:100%;
+
+div.title{
+    width: 100%;
+    height: 300px;
+    float: left;
+    padding-left: -10px;
 }
