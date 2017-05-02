@@ -9,7 +9,7 @@ var chartTitle = "";
 var xLabel = "";
 
 
-var canvasWidth = 800;
+var canvasWidth = 500;
 var canvasHeight = 500;
 
 
@@ -69,19 +69,52 @@ function setup(){
   print(dataTable.getColumnCount() + ' columns loaded...');
 
 
+
+  var waypoint = new Waypoint({
+    element: document.getElementById('BX_waypoint'),
+    handler: function(direction) {
+      if (direction == 'down'){
+      plotScatter('Richmond', 'BX_Element');
+      }
+    }
+  })
   var waypoint1 = new Waypoint({
-    element: document.getElementById('basic-waypoint'),
-    handler: function() {
-      plotScatter('Kings','basic-waypoint');
+    element: document.getElementById('BK_waypoint'),
+    handler: function(direction) {
+      if (direction == 'down'){
+      plotScatter('Kings','BK_Element');
+      }
     }
   })
 
+
   var waypoint2 = new Waypoint({
-    element: document.getElementById('basic-waypoint1'),
-    handler: function() {
-      plotScatter('Richmond', 'basic-waypoint1');
+    element: document.getElementById('QN_waypoint'),
+    handler: function(direction) {
+      if (direction == 'down'){
+      plotScatter('Queens', 'QN_Element');
+      }
     }
   })
+
+  var waypoint3 = new Waypoint({
+    element: document.getElementById('MN_waypoint'),
+    handler: function(direction) {
+      if (direction == 'down'){
+      plotScatter('Manhattan', 'MN_Element');
+      }
+    }
+  })
+
+  var waypoint4 = new Waypoint({
+    element: document.getElementById('SI_waypoint'),
+    handler: function(direction) {
+      if (direction == 'down'){
+      plotScatter('Richmond', 'SI_Element');
+      }
+    }
+  })
+
 
   //plotScatter('Richmond');
 
@@ -94,11 +127,15 @@ function draw(){
 
   //axis lines
 
-  line(10,400,400,400);
+  line(10,410,400,410);
   line(10,0,10,400);
   fill(0);
-  text(chartTitle,10,10);
-  text(xLabel,400,400);
+  textSize(12);
+
+  //text(chartTitle,250,25);
+
+  text("Poverty Rate",350,425);
+  text("AirBnB Rent Premium",25,10);
 
 
 
