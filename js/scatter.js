@@ -1,9 +1,15 @@
 //****** globals
 var scatterDots = [];
-
 var dataTable;
 
-var canvasWidth = 500;
+
+/// global canvas variables
+var cnv;
+var chartTitle = "";
+var xLabel = "";
+
+
+var canvasWidth = 800;
 var canvasHeight = 500;
 
 
@@ -17,20 +23,17 @@ function getMaxValue(variable_name){
   return(maxValue);
 }
 
-function countRecords(boro){
-  counter = 0;
-  for ( var i = 0; i < dataTable.getRowCount(); i++){
-    if (dataTable.getString(i, 'County ') == boro){
-      counter += 1;
-    }
-  }
-  return(counter);
-}
 
 
-function plotScatter(boro){
+function plotScatter(boro, waypoint_id){
+  scatterDots = [];
+  cnv.parent(waypoint_id);
   var max_poverty = getMaxValue('poverty_rate');
   var max_rent_premium = getMaxValue('premium_pct_median_rent');
+
+  /// Title
+  chartTitle = boro;
+  ///xLabel = max_poverty;
 
   for (var i = 0; i < dataTable.getRowCount(); i++){
     var b   = dataTable.getString(i,'County ');
@@ -39,6 +42,7 @@ function plotScatter(boro){
       var prem = dataTable.getNum(i,'premium_pct_median_rent');
       var pov = dataTable.getNum(i, 'poverty_rate');
       scatterDots.push(new Dot(x = pov, y = prem, max_x = 1, max_y = max_rent_premium));
+
     }
 
   }
@@ -57,8 +61,7 @@ function preload(){
 
 
 function setup(){
-
-  createCanvas(canvasWidth, canvasHeight);
+  cnv = createCanvas(canvasWidth, canvasHeight);
   var nBalls = dataTable.getRowCount();
   colorMode(HSB,100);
 
@@ -66,20 +69,43 @@ function setup(){
   print(dataTable.getColumnCount() + ' columns loaded...');
 
 
+  var waypoint1 = new Waypoint({
+    element: document.getElementById('basic-waypoint'),
+    handler: function() {
+      plotScatter('Kings','basic-waypoint');
+    }
+  })
 
+  var waypoint2 = new Waypoint({
+    element: document.getElementById('basic-waypoint1'),
+    handler: function() {
+      plotScatter('Richmond', 'basic-waypoint1');
+    }
+  })
 
-
-  plotScatter('Richmond');
+  //plotScatter('Richmond');
 
 
 }
 
 function draw(){
-  fill(0,100,100,0.1);
+  //fill(0,100,100,0.1);
   background(365);
+
+  //axis lines
+
+  line(10,400,400,400);
+  line(10,0,10,400);
+  fill(0);
+  text(chartTitle,10,10);
+  text(xLabel,400,400);
+
+
+
+
+
   for (var i = 0; i < scatterDots.length; i++){
      scatterDots[i].display();
-
    }
 }
 
@@ -100,7 +126,8 @@ function Dot(x, y, max_x, max_y){
   this.velocity        = createVector(0,15);
 
   this.display = function(){
-    fill(this.color,  this.brightness ,100 );
+    noFill();
+    //fill(this.color,  this.brightness ,100 );
 
     /// stop the dot motion if it reaches its target position
     this.current_position.add(this.velocity);
@@ -109,8 +136,8 @@ function Dot(x, y, max_x, max_y){
       this.velocity.set(0,0);
       this.current_position.y = this.target_position.y;
     }
-
     ellipse(this.current_position.x , this.current_position.y , 5 );
+
   }
 
 
