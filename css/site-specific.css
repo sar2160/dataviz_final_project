@@ -1,0 +1,62 @@
+
+
+div.spacer{
+position: relative;
+max-width: 1200px;
+margin: auto auto;
+height: 300px;
+color: grey;
+}
+
+
+div.body-wrapper{
+position: relative;
+max-width: 1200px;
+margin: auto auto;
+height: 800px;
+}
+
+
+div.chart-container{
+  width: 45%;
+  margin-top: 25px;
+  padding: 10px;
+  display: inline-block;
+  margin: 0 1%;
+  float: left;
+
+}
+
+div.chart-text{
+  width: 40%;
+  height: 400px;
+  margin-top: 25px;
+  padding: 10px;
+  display: inline-block;
+  margin: 0 1%;
+  float: left;
+  background: white;
+  border-style: solid;
+
+}
+
+.first {
+    background:blue;
+    height: 600px;
+    width:100%;
+}
+.second {
+    background:white;
+    height: 600px;
+    width:50%;
+}
+.third {
+    background:white;
+    height: 800px;
+    width:100%;
+}
+.fourth {
+    background:white;
+    height: 800px;
+    width:100%;
+}
