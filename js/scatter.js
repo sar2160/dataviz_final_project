@@ -11,6 +11,9 @@ var xLabel = "";
 var yLabel = "";
 var x_tick_half = "";
 var y_tick_half = "";
+var c1, c2;
+var Y_AXIS = 1;
+var X_AXIS = 2;
 
 
 
@@ -41,6 +44,28 @@ function getSum(total, num) {
 }
 
 
+/// from p5 reference example
+function setGradient(x, y, w, h, c1, c2, axis) {
+
+  noFill();
+
+  if (axis == Y_AXIS) {  // Top to bottom gradient
+    for (var i = y; i <= y+h; i++) {
+      var inter = map(i, y, y+h, 0, 1);
+      var c = lerpColor(c1, c2, inter);
+      stroke(c);
+      line(x, i, x+w, i);
+    }
+  }
+  else if (axis == X_AXIS) {  // Left to right gradient
+    for (var i = x; i <= x+w; i++) {
+      var inter = map(i, x, x+w, 0, 1);
+      var c = lerpColor(c1, c2, inter);
+      stroke(c);
+      line(i, y, i, y+h);
+    }
+  }
+}
 
 
 // Dot object for map
@@ -73,11 +98,12 @@ function Dot(x, y, min_x, max_x, min_y, max_y, fill_color = 0){
 }
 
 // Ellipse object for scatter plot
-function Ellipse(x, y, min_x, max_x, min_y, max_y, fill_color = 0){
+function Ellipse(x, y, min_x, max_x, min_y, max_y, fill_color, fill_value, max_fill){
   //console.log(this.r);
 
   this.color = fill_color;
-
+  this.fill_value = map(fill_value, 0, max_fill, 0, 100);
+  console.log(this.fill_value);
   this.x_pos = map(x, min_x ,max_x, 25,  490);
   this.y_pos = map(y, min_y, max_y , 25, 490 );
   //this.brightness    = map(indicator, 0,max_value,0,100);
@@ -87,8 +113,9 @@ function Ellipse(x, y, min_x, max_x, min_y, max_y, fill_color = 0){
   this.velocity        =   createVector(0,15);
 
   this.display = function(){
-    noFill();
-    //fill(this.color,  this.brightness ,100 );
+    if (fill_color > -1){
+      fill(this.color,  this.fill_value ,100 );
+    } else {noFill()};
 
     /// stop the dot motion if it reaches its target position
     this.current_position.add(this.velocity);
@@ -109,11 +136,13 @@ function plotScatter(dataTable, boro, waypoint_id){
   cnv.parent(waypoint_id);
   var max_poverty = getMaxValue(dataTable, 'poverty_rate');
   var max_rent_premium = getMaxValue(dataTable, 'premium_pct_median_rent');
-  console.log(max_rent_premium);
+  var max_demog = getMaxValue(dataTable, 'pct_non_white');
+
+
   /// Title
   chartTitle = boro;
   xLabel = 'Poverty Rate';
-  yLabel = 'AirBnB Premium';
+  yLabel = 'AirBnB Premium (multiples of med. rent)';
 
   x_tick_half = '50%';
   y_tick_half = (max_rent_premium / 2)   .toFixed(0) + 'x' ;
@@ -125,7 +154,8 @@ function plotScatter(dataTable, boro, waypoint_id){
     if (b == boro){
       var prem = dataTable.getNum(i,'premium_pct_median_rent');
       var pov = dataTable.getNum(i, 'poverty_rate');
-      scatterDots.push(new Ellipse(x = pov, y = prem, min_x = 0, max_x = 1, min_y = 0, max_y = max_rent_premium));
+      var demog = dataTable.getNum(i, 'pct_non_white');
+      scatterDots.push(new Ellipse(x = pov, y = prem, min_x = 0, max_x = 1, min_y = 0, max_y = max_rent_premium, fill_color = 0 , fill_value = demog , max_fill = 1 ));
 
     }
 
@@ -180,6 +210,10 @@ function preload(){
 function setup(){
   cnv = createCanvas(canvasWidth, canvasHeight);
   colorMode(HSB,100);
+
+  /// gradients for the fill legend
+  c1 = color(0,0,100);
+  c2 = color(0,100,100);
 
 
 /// Each waypoint puts a plot on the webpage.
@@ -267,10 +301,22 @@ function draw(){
   textFont("Verdana");
 
   // axis marks
-  text(xLabel, 425, 510);
+  text(xLabel, 405, 510);
   text(yLabel, 25, 10);
   text(x_tick_half, 245, 510);
   text(y_tick_half, 0, 245);
+
+  /// don't plot a legend on the map charts
+  if (xLabel != "East"){
+  setGradient(400, 75, 20, 100, c2, c1, Y_AXIS);
+  textSize(8);
+  fill(0);
+  text('100% white', 425, 175);
+  text('100% non-white', 425, 80);
+
+  }
+
+
   for (var i = 0; i < scatterDots.length; i++){
      scatterDots[i].display();
    }
