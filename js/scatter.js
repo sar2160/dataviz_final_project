@@ -264,6 +264,7 @@ function draw(){
   line(25,490,490,490);
   line(25,25,25,490);
   textSize(12);
+  textFont("Verdana");
 
   // axis marks
   text(xLabel, 425, 510);
