@@ -124,7 +124,7 @@ function Ellipse(x, y, min_x, max_x, min_y, max_y, fill_color, fill_value, max_f
       this.velocity.set(0,0);
       this.current_position.y = this.target_position.y;
     }
-    ellipse(this.current_position.x , this.current_position.y, 5  );
+    ellipse(this.current_position.x , this.current_position.y, 7 );
 
   }
 }
